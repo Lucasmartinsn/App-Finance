@@ -1,8 +1,8 @@
 -- name: CreateAccounts :one
 INSERT INTO accounts (
-    title, type, description, value, date
+    user_id, categories_id, title, type, description, value, date
 ) VALUES (
-    $1,$2,$3,$4,$5
+    $1,$2,$3,$4,$5,$6,$7
 ) RETURNING *;
 
 -- name: GetAccountsById :one
