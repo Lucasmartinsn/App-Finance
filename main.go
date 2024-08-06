@@ -1,15 +1,10 @@
 package main
 
 import (
-	conf "development/application/fiance/conf"
-	"fmt"
+	"development/application/fiance/server"
 )
 
 func main() {
-	t := conf.Conn()
-	te, err := t.Conn.GetUser(t.Cxt, "lucas")
-	if err != nil {
-		return
-	}
-	fmt.Println(te)
+	server := server.NewServer()
+	server.Run()
 }
