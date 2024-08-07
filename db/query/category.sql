@@ -11,6 +11,9 @@ SELECT * FROM categories WHERE id = $1;
 -- name: GetCategory :many
 SELECT * FROM categories WHERE user_id = $1 AND type = $2 AND title LIKE $3 AND description LIKE $4;
 
+-- name: GetCategoryByUserId :many
+SELECT * FROM categories WHERE user_id = $1 AND type LIKE $2;
+
 -- name: UpdateCategory :exec
 UPDATE categories SET 
     title = $2,
