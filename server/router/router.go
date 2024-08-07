@@ -1,6 +1,8 @@
 package router
 
 import (
+	"development/application/fiance/server/handles"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,9 +14,13 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 	// Criando crupos de rotas
 	main := router.Group("v1")
 	{
-		store := main.Group("go-fiance")
+		user := main.Group("go-fiance")
 		{
-			store.GET("buscar-usuario")
+			user.GET("buscar-usuarios", handles.GetUsers)
+			user.GET("buscar-usuario/:id", handles.GetUserById)
+			user.POST("usuario", handles.CreateUser)
+			user.PUT("usuario/:id", handles.UpdateUser)
+			user.DELETE("usuario/:id", handles.DeleteUser)
 		}
 	}
 	return router
