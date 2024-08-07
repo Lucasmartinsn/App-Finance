@@ -13,7 +13,7 @@ import (
 )
 
 // Esse Struct Vai armazenar as principais variaveis que vao ser usadas para recuperar os dados
-type Connect struct {
+type connect struct {
 	Conn *db.Queries
 	Cxt  context.Context
 }
@@ -26,19 +26,19 @@ func init() {
 }
 
 // A funcao Conn vai estabelecer a conexao com o banco de dados e com a library
-func Conn() Connect {
+func Conn() connect {
 	// Url de conexão com o database
-	url := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), 
+	url := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
 	// Abrindo a conexao com a library
 	conn, err := pgx.Connect(context.Background(), url)
 	if err != nil {
-		return Connect{}
+		return connect{}
 	}
 
-	// Papulando a Struct e retornando os dados
-	return Connect{
+	// Populando a Struct e retornando os dados
+	return connect{
 		Conn: db.New(conn),
-		Cxt: context.Background(),
+		Cxt:  context.Background(),
 	}
 }
