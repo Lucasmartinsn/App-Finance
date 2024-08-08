@@ -48,20 +48,26 @@ func (q *Queries) DeleteUser(ctx context.Context, id pgtype.UUID) error {
 }
 
 const getUser = `-- name: GetUser :many
-SELECT id, username, password, email, create_at FROM users WHERE username LIKE $1
+SELECT username, password, email, create_at FROM users WHERE username LIKE $1
 `
 
-func (q *Queries) GetUser(ctx context.Context, username string) ([]User, error) {
+type GetUserRow struct {
+	Username string
+	Password string
+	Email    string
+	CreateAt pgtype.Timestamptz
+}
+
+func (q *Queries) GetUser(ctx context.Context, username string) ([]GetUserRow, error) {
 	rows, err := q.db.Query(ctx, getUser, username)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []User
+	var items []GetUserRow
 	for rows.Next() {
-		var i User
+		var i GetUserRow
 		if err := rows.Scan(
-			&i.ID,
 			&i.Username,
 			&i.Password,
 			&i.Email,
@@ -78,19 +84,41 @@ func (q *Queries) GetUser(ctx context.Context, username string) ([]User, error) 
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, username, password, email, create_at FROM users WHERE id = $1
+SELECT username, password, email, create_at FROM users WHERE id = $1
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id pgtype.UUID) (User, error) {
+type GetUserByIdRow struct {
+	Username string
+	Password string
+	Email    string
+	CreateAt pgtype.Timestamptz
+}
+
+func (q *Queries) GetUserById(ctx context.Context, id pgtype.UUID) (GetUserByIdRow, error) {
 	row := q.db.QueryRow(ctx, getUserById, id)
-	var i User
+	var i GetUserByIdRow
 	err := row.Scan(
-		&i.ID,
 		&i.Username,
 		&i.Password,
 		&i.Email,
 		&i.CreateAt,
 	)
+	return i, err
+}
+
+const loginUser = `-- name: LoginUser :one
+SELECT id, password FROM users WHERE email = $1
+`
+
+type LoginUserRow struct {
+	ID       pgtype.UUID
+	Password string
+}
+
+func (q *Queries) LoginUser(ctx context.Context, email string) (LoginUserRow, error) {
+	row := q.db.QueryRow(ctx, loginUser, email)
+	var i LoginUserRow
+	err := row.Scan(&i.ID, &i.Password)
 	return i, err
 }
 

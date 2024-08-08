@@ -6,10 +6,13 @@ INSERT INTO users (
 ) RETURNING *;
 
 -- name: GetUser :many
-SELECT * FROM users WHERE username LIKE $1;
+SELECT username, password, email, create_at FROM users WHERE username LIKE $1;
+
+-- name: LoginUser :one
+SELECT id, password FROM users WHERE email = $1;
 
 -- name: GetUserById :one
-SELECT * FROM users WHERE id = $1;
+SELECT username, password, email, create_at FROM users WHERE id = $1;
 
 -- name: UpdateUser :exec
 UPDATE users SET
