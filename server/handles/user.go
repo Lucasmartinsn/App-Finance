@@ -4,6 +4,7 @@ import (
 	"development/application/fiance/conf"
 	"development/application/fiance/library"
 	"development/application/fiance/server/services/encryption"
+	jwttoken "development/application/fiance/server/services/jwtToken"
 	"development/application/fiance/server/services/response"
 	"development/application/fiance/server/util"
 	"errors"
@@ -38,6 +39,45 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 	response.ResponseBody(c, http.StatusCreated, usuario)
+}
+
+/*
+Funcao de Login
+*/
+func LoginUser(c *gin.Context) {
+	var arg struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	if err := c.ShouldBindJSON(&arg); err != nil {
+		response.ResponseError(c, http.StatusBadRequest, "falhar ao converter para json", err)
+		return
+	}
+	store := conf.Conn()
+	userRow, err := store.Conn.LoginUser(store.Cxt, arg.Email)
+	if err != nil {
+		response.ResponseError(c, http.StatusBadRequest, "falhar ao realizar o login", err)
+		return
+	}
+
+	permisao, err := encryption.VerifyHash(arg.Password, userRow.Password)
+	if err != nil {
+		response.ResponseError(c, http.StatusBadRequest, "Senha ou usuario errado", err)
+		return
+	}
+	if permisao {
+		token, err := jwttoken.NewJWTService_Default().GenerateToken_Default(userRow.ID)
+		if err != nil {
+			response.ResponseError(c, 401, "Falhar ao gerar token", err)
+			return
+		}
+		c.JSON(http.StatusCreated, gin.H{
+			"token": token,
+		})
+	} else {
+		response.ResponseError(c, http.StatusForbidden, "Sem permicao", err)
+		return
+	}
 }
 
 /*
