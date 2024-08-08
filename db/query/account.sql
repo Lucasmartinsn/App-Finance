@@ -9,7 +9,8 @@ INSERT INTO accounts (
 SELECT * FROM accounts WHERE id = $1;
 
 -- name: GetAccounts :many
-SELECT * FROM accounts WHERE user_id = $1 AND type = $2 AND title LIKE $3 AND description LIKE $4 AND date LIKE $5;
+SELECT * FROM accounts WHERE user_id = $1 AND type = $2 AND title LIKE $3
+AND description LIKE $4 AND date = $5;
 
 -- name: GetAccountsFull :many
 SELECT 
@@ -24,7 +25,7 @@ SELECT
     c.title as categories_title
 FROM accounts a LEFT JOIN categories c ON c.id = a.categories_id
 WHERE a.user_id = $1 AND a.type = $2 AND a.title LIKE $3 
-AND a.categories_id = $4 AND a.description LIKE $5 AND a.date = $6;
+AND a.categories_id = $4 AND a.description LIKE $5 AND a.date BETWEEN $6 AND $7;
 
 -- name: UpdateAccounts :exec
 UPDATE accounts SET 

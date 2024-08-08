@@ -98,7 +98,8 @@ func (q *Queries) GetAccountReports(ctx context.Context, arg GetAccountReportsPa
 }
 
 const getAccounts = `-- name: GetAccounts :many
-SELECT id, user_id, categories_id, title, type, description, value, date, create_at FROM accounts WHERE user_id = $1 AND type = $2 AND title LIKE $3 AND description LIKE $4 AND date LIKE $5
+SELECT id, user_id, categories_id, title, type, description, value, date, create_at FROM accounts WHERE user_id = $1 AND type = $2 AND title LIKE $3
+AND description LIKE $4 AND date = $5
 `
 
 type GetAccountsParams struct {
@@ -179,7 +180,7 @@ SELECT
     c.title as categories_title
 FROM accounts a LEFT JOIN categories c ON c.id = a.categories_id
 WHERE a.user_id = $1 AND a.type = $2 AND a.title LIKE $3 
-AND a.categories_id = $4 AND a.description LIKE $5 AND a.date = $6
+AND a.categories_id = $4 AND a.description LIKE $5 AND a.date BETWEEN $6 AND $7
 `
 
 type GetAccountsFullParams struct {
@@ -189,6 +190,7 @@ type GetAccountsFullParams struct {
 	CategoriesID pgtype.UUID
 	Description  string
 	Date         pgtype.Date
+	Date_2       pgtype.Date
 }
 
 type GetAccountsFullRow struct {
@@ -211,6 +213,7 @@ func (q *Queries) GetAccountsFull(ctx context.Context, arg GetAccountsFullParams
 		arg.CategoriesID,
 		arg.Description,
 		arg.Date,
+		arg.Date_2,
 	)
 	if err != nil {
 		return nil, err
