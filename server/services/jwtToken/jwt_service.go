@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/google/uuid"
+	// "github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type JWTService_Default struct {
@@ -22,11 +23,13 @@ func NewJWTService_Default() *JWTService_Default {
 }
 
 type Claims_Default struct {
-	UserID uuid.UUID `json:"userId"`
+	// UserID uuid.UUID `json:"userId"`
+	UserID pgtype.UUID `json:"userId"`
 	jwt.StandardClaims
 }
 
-func (s *JWTService_Default) GenerateToken_Default(userID uuid.UUID) (string, error) {
+// func (s *JWTService_Default) GenerateToken_Default(userID uuid.UUID) (string, error) {
+	func (s *JWTService_Default) GenerateToken_Default(userID pgtype.UUID) (string, error) {
 	claims := &Claims_Default{
 		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
