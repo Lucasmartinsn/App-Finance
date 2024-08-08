@@ -1,7 +1,7 @@
 package router
 
 import (
-	"development/application/fiance/server/handles"
+	handles "development/application/fiance/server/handlers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +18,7 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 		{
 			login.POST("login", handles.LoginUser)
 		}
-		
+
 		user := main.Group("")
 		{
 			user.GET("buscar-usuarios", handles.GetUsers)
