@@ -14,6 +14,11 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 	// Criando crupos de rotas
 	main := router.Group("v1/go-fiance")
 	{
+		login := main.Group("")
+		{
+			login.POST("login", handles.LoginUser)
+		}
+		
 		user := main.Group("")
 		{
 			user.GET("buscar-usuarios", handles.GetUsers)
