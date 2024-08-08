@@ -2,6 +2,7 @@ package router
 
 import (
 	handles "development/application/fiance/server/handlers"
+	"development/application/fiance/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,14 +13,14 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 	router.Use(gin.Recovery())
 
 	// Criando crupos de rotas
-	main := router.Group("v1/go-fiance")
+	main := router.Group("v1/go-fiance", middlewares.CORSMiddleware())
 	{
 		login := main.Group("")
 		{
 			login.POST("login", handles.LoginUser)
 		}
 
-		user := main.Group("")
+		user := main.Group("", middlewares.Auth_default())
 		{
 			user.GET("buscar-usuarios", handles.GetUsers)
 			user.GET("buscar-usuario/:id", handles.GetUserById)
@@ -28,7 +29,7 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 			user.DELETE("usuario/:id", handles.DeleteUser)
 		}
 
-		category := main.Group("")
+		category := main.Group("", middlewares.Auth_default())
 		{
 			category.GET("buscar-category/:id", handles.GetCategoryById)
 			category.GET("buscar-categorys", handles.GetCategoriesByUserId)
@@ -36,7 +37,7 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 			category.POST("category", handles.CreateCategory)
 			category.PUT("category", handles.UpdateCategory)
 		}
-		account := main.Group("")
+		account := main.Group("", middlewares.Auth_default())
 		{
 			account.GET("buscar-account/:id", handles.GetAccountsById)
 			account.GET("buscar-account/reports", handles.GetAccountReports)
