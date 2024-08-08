@@ -31,6 +31,16 @@ func ConfigRouter(router *gin.Engine) *gin.Engine {
 			category.POST("category", handles.CreateCategory)
 			category.PUT("category", handles.UpdateCategory)
 		}
+		account := main.Group("")
+		{
+			account.GET("buscar-account/:id", handles.GetAccountsById)
+			account.GET("buscar-account/reports", handles.GetAccountReports)
+			account.GET("buscar-account/graph", handles.GetAccountGraph)
+			account.POST("buscar-account/full", handles.GetAccountsFull)
+			account.POST("buscar-account", handles.GetAccounts)
+			account.POST("account", handles.CreateAccount)
+			account.PUT("account", handles.UpdateAccount)
+		}
 	}
 	return router
 }
