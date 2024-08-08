@@ -3,6 +3,7 @@ package handles
 import (
 	"development/application/fiance/conf"
 	"development/application/fiance/library"
+	"development/application/fiance/server/services/encryption"
 	"development/application/fiance/server/services/response"
 	"development/application/fiance/server/util"
 	"errors"
@@ -24,6 +25,12 @@ func CreateUser(c *gin.Context) {
 		response.ResponseError(c, http.StatusBadRequest, "Erro ao converter para JSON", err)
 		return
 	}
+	senha, err := encryption.GenerateHash(user.Password)
+	if err != nil {
+		response.ResponseError(c, http.StatusBadRequest, "Falhar ao encript de senha", err)
+		return
+	}
+	user.Password = senha
 	store := conf.Conn()
 	usuario, err := store.Conn.CreateUser(store.Cxt, user)
 	if err != nil {
@@ -92,6 +99,12 @@ func UpdateUser(c *gin.Context) {
 			response.ResponseError(c, http.StatusBadRequest, "Erro ao converter para JSON", err)
 			return
 		}
+		senha, err := encryption.GenerateHash(user.Password)
+		if err != nil {
+			response.ResponseError(c, http.StatusBadRequest, "Falhar ao encript de senha", err)
+			return
+		}
+		user.Password = senha
 		user.ID = util.ConvertUUID(id)
 		store := conf.Conn()
 		if err = store.Conn.UpdateUserPass(store.Cxt, user); err != nil {
@@ -99,6 +112,7 @@ func UpdateUser(c *gin.Context) {
 			return
 		}
 		response.ResponseSuccess(c, http.StatusOK)
+
 	case "data":
 		var user library.UpdateUserParams
 		if err := c.ShouldBindJSON(&user); err != nil {
@@ -112,6 +126,7 @@ func UpdateUser(c *gin.Context) {
 			return
 		}
 		response.ResponseSuccess(c, http.StatusOK)
+
 	default:
 		response.ResponseError(c, http.StatusNotFound, "Url não existe", errors.New("falha ao buscar url"))
 	}
