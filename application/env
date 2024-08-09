@@ -1,0 +1,14 @@
+# Variaveis de Conexao com o database
+DB_USER=
+DB_HOST=
+DB_PASSWORD=
+DB_NAME=
+DB_PORT=
+
+# Variavei de configuração da API
+API_PORT=
+API_LOCALHOST=
+
+# Variavei de encryptacao do JWT token
+JWT_SECRET_KEY_DEFAULT=
+JWT_ISSUER_DEFAULT=
