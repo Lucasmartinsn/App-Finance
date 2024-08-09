@@ -5,7 +5,6 @@ import (
 	"development/application/fiance/library"
 	"development/application/fiance/server/services/response"
 	"development/application/fiance/server/util"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,8 +36,6 @@ func GetCategories(c *gin.Context) {
 		response.ResponseError(c, http.StatusBadRequest, "falhar converter para json", err)
 		return
 	}
-	arg.Title = fmt.Sprintf("%%%s%%", arg.Title)
-	arg.Description = fmt.Sprintf("%%%s%%", arg.Description)
 	store := conf.Conn()
 	categories, err := store.Conn.GetCategory(store.Cxt, arg)
 	if err != nil {
@@ -77,7 +74,7 @@ func GetCategoriesByUserId(c *gin.Context) {
 	}
 	arg := library.GetCategoryByUserIdParams{
 		UserID: util.ConvertUUID(id),
-		Type:   fmt.Sprintf("%%%s%%", c.Query("type")),
+		Type:   c.Query("type"),
 	}
 	store := conf.Conn()
 	categories, err := store.Conn.GetCategoryByUserId(store.Cxt, arg)
