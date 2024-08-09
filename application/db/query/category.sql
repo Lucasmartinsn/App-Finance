@@ -9,10 +9,13 @@ INSERT INTO categories (
 SELECT * FROM categories WHERE id = $1;
 
 -- name: GetCategory :many
-SELECT * FROM categories WHERE user_id = $1 AND type = $2 AND title LIKE $3 AND description LIKE $4;
+SELECT * FROM categories WHERE user_id = $1 AND type = $2 
+AND title LIKE CONCAT('%', LOWER(@title::text), '%') 
+AND description LIKE CONCAT('%', LOWER(@description::text), '%');
 
 -- name: GetCategoryByUserId :many
-SELECT * FROM categories WHERE user_id = $1 AND type LIKE $2;
+SELECT * FROM categories WHERE user_id = $1 
+AND type LIKE CONCAT('%', LOWER(@type::text), '%');
 
 -- name: UpdateCategory :exec
 UPDATE categories SET 

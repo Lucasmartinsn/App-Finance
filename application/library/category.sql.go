@@ -46,7 +46,9 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 }
 
 const getCategory = `-- name: GetCategory :many
-SELECT id, user_id, title, type, description, create_at FROM categories WHERE user_id = $1 AND type = $2 AND title LIKE $3 AND description LIKE $4
+SELECT id, user_id, title, type, description, create_at FROM categories WHERE user_id = $1 AND type = $2 
+AND title LIKE CONCAT('%', LOWER($3::text), '%') 
+AND description LIKE CONCAT('%', LOWER($4::text), '%')
 `
 
 type GetCategoryParams struct {
@@ -107,7 +109,8 @@ func (q *Queries) GetCategoryById(ctx context.Context, id pgtype.UUID) (Category
 }
 
 const getCategoryByUserId = `-- name: GetCategoryByUserId :many
-SELECT id, user_id, title, type, description, create_at FROM categories WHERE user_id = $1 AND type LIKE $2
+SELECT id, user_id, title, type, description, create_at FROM categories WHERE user_id = $1 
+AND type LIKE CONCAT('%', LOWER($2::text), '%')
 `
 
 type GetCategoryByUserIdParams struct {
