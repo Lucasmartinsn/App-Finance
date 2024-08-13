@@ -11,6 +11,7 @@ declare module 'styled-components'{
             blackOne: string;
             blacktwo: string;
             blackthree: string;
+            white: string;
         };
     }
 }

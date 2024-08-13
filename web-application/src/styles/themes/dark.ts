@@ -8,5 +8,6 @@ export const darkTheme = {
         blackOne: "#131212",
         blacktwo: "#171616",
         blackthree: "#1E1E1E",
+        white: "#FFF",
     },
 };
