@@ -1,0 +1,15 @@
+FROM golang:1.22-alpine3.20
+
+RUN apk add --no-cache --update git
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN go get -d -v \
+  && go install -v \
+  && go build -o /usr/local/bin/app .
+
+EXPOSE 5050
+
+CMD ["/usr/local/bin/app"]
