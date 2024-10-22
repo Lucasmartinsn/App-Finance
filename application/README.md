@@ -24,19 +24,18 @@ Comandos de inicalização
     
  2 - Execultando os Scripts gerados no passo acima.
  
-        migrate -path db/migration -database "postgres://postgres:123@localhost:5432/fiance?sslmode=disable" -verbose up
+    migrate -path db/migration -database "postgres://postgres:123@localhost:5432/fiance?sslmode=disable" -verbose up
     
 ### Instalando o Sqlc
 Repositorio com a documentacao de instalacao
 
     https://docs.sqlc.dev/en/stable/overview/install.html
 
-Para Instalar usando no Linux
+Para Instalar usando o Linux
 
     sudo snap install sqlc
 
 Caso você altera os seguintes arquivos
-
 
     └── db
         ├── query
@@ -47,12 +46,12 @@ Para que as alterações seja executadas pelo Sqlc deve execultar comando abaixo
 
     sqlc generate
 
-### Intalação do monitoramente de estado da aolicação
+### Intalação do sistema de monitoramento do estado da aplicação
 Instalaçaõ do binarios.
 
     curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
-Inicializando o Sytema:
+Inicializando o Sistema:
 
     air init
     air
